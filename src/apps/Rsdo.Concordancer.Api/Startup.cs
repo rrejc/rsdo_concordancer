@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using Rsdo.Concordancer.Api.Controllers;
 using Rsdo.Concordancer.Api.Framework;
 using Rsdo.Concordancer.Core.Constants;
@@ -85,7 +85,11 @@ public class Startup
                 // we would have to build the container which would (at this point) double singletons.
                 // So we are duplicated code from ConnectionStringProvider
                 var connectionString = Configuration[ConfigurationKey.Database.MasterConnectionString];
-                x.UsePostgreSqlStorage(connectionString);
+                x.UsePostgreSqlStorage(
+                    options =>
+                    {
+                        options.UseNpgsqlConnection(connectionString);
+                    });
                 x.UseMediator();
             });
         services.AddHangfireServer();
