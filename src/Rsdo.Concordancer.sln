@@ -24,6 +24,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rsdo.Concordancer.Data", "c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rsdo.Concordancer.SystemManager", "apps\Rsdo.Concordancer.SystemManager\Rsdo.Concordancer.SystemManager.csproj", "{41B26AD1-C0A5-4796-95D0-CB84FB574A83}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0BC9D8CB-3F46-40F4-B769-E2605F03E0F6}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
