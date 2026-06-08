@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.4.0" />
-      <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
-      <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
-      <PackageReference Include="OpenSearch.Client" Version="1.1.0" />
-      <PackageReference Include="Rsdo.StyleCop" Version="1.0.0" />
+      <PackageReference Include="Autofac" />
+      <PackageReference Include="Microsoft.Extensions.Configuration" />
+      <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+      <PackageReference Include="OpenSearch.Client" />
+      <PackageReference Include="Rsdo.StyleCop" />
     </ItemGroup>
 
     <ItemGroup>

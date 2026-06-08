@@ -5,9 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="6.4.0" />
-      <PackageReference Include="CommandLineParser" Version="2.9.1" />
-      <PackageReference Include="Rsdo.StyleCop" Version="1.0.0" />
+      <PackageReference Include="Autofac" />
+      <PackageReference Include="CommandLineParser" />
+      <PackageReference Include="Rsdo.StyleCop" />
     </ItemGroup>
 
     <ItemGroup>

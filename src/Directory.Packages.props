@@ -1,0 +1,43 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="Autofac" Version="6.4.0" />
+    <PackageVersion Include="Autofac.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageVersion Include="CommandLineParser" Version="2.9.1" />
+    <PackageVersion Include="coverlet.collector" Version="3.1.2" />
+    <PackageVersion Include="EFCore.NamingConventions" Version="6.0.0" />
+    <PackageVersion Include="FluentMigrator" Version="3.3.2" />
+    <PackageVersion Include="FluentMigrator.Runner" Version="3.3.2" />
+    <PackageVersion Include="FluentMigrator.Runner.Postgres" Version="3.3.2" />
+    <PackageVersion Include="FluentValidation" Version="11.2.2" />
+    <PackageVersion Include="Hangfire" Version="1.7.31" />
+    <PackageVersion Include="Hangfire.Core" Version="1.7.31" />
+    <PackageVersion Include="Hangfire.PostgreSql" Version="1.9.9" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="6.0.9" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="6.0.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
+    <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageVersion Include="Npgsql" Version="6.0.7" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.7" />
+    <PackageVersion Include="OpenSearch.Client" Version="1.1.0" />
+    <PackageVersion Include="Rsdo.StyleCop" Version="1.0.0" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="6.0.1" />
+    <PackageVersion Include="Serilog.Expressions" Version="3.4.1" />
+    <PackageVersion Include="Serilog.Settings.Configuration" Version="3.4.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageVersion Include="Serilog.Sinks.Email" Version="2.4.0" />
+    <PackageVersion Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Annotations" Version="6.4.0" />
+    <PackageVersion Include="xunit" Version="2.4.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
+  </ItemGroup>
+</Project>
