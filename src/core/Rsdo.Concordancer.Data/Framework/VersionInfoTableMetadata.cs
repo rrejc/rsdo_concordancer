@@ -14,7 +14,7 @@ public class VersionInfoTableMetadata : IVersionTableMetaData
 
     public string UniqueIndexName => "uc_version";
 
-    public bool CreateWithPrimaryKey => true;
+    public bool CreateWithPrimaryKey => false;
 
     public object ApplicationContext { get; set; }
 

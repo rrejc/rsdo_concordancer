@@ -1,52 +1,146 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Text.Json.Serialization;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Hangfire;
+using Hangfire.PostgreSql;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi;
+using Rsdo.Concordancer.Api.Controllers;
+using Rsdo.Concordancer.Api.Framework;
+using Rsdo.Concordancer.Core.Constants;
+using Rsdo.Concordancer.Data.CompositionRoot;
+using Rsdo.Concordancer.Infrastructure.CompositionRoot;
+using Rsdo.Concordancer.ServiceModel.Shared;
+using Rsdo.Concordancer.Services.CompositionRoot;
+using Rsdo.Concordancer.Services.Framework.Cache;
 using Serilog;
 
-namespace Rsdo.Concordancer.Api;
-
-public class Program
-{
-    public static int Main(string[] args)
+var builder = WebApplication.CreateBuilder(
+    new WebApplicationOptions()
     {
-        // Read configuration file
-        var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
-            .Build();
+        Args = args,
+        WebRootPath = "./WebApp/build",
+    });
 
-        // Create logger
-        Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
+builder.Host.UseSerilog(
+    (context, _, loggerConfiguration) =>
+    {
+        loggerConfiguration.ReadFrom.Configuration(context.Configuration);
+    });
 
-        // Run application
-        try
-        {
-            Log.Information("Starting web host");
-            CreateHostBuilder(args).Build().Run();
-            return 0;
-        }
-        catch (Exception e)
-        {
-            Log.Fatal(e, "Host terminated unexpectedly");
-            return 1;
-        }
-        finally
-        {
-            Log.CloseAndFlush();
-        }
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .UseSerilog()
-            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
-            .ConfigureWebHostDefaults(
-                webBuilder =>
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(
+    containerBuilder =>
+    {
+        containerBuilder.RegisterModule(new ServicesModule());
+        containerBuilder.RegisterModule(new InfrastructureModule());
+        containerBuilder.RegisterModule(new DataModule());
+        containerBuilder.RegisterBuildCallback(
+            (c) =>
+            {
+                var warmUps = c.Resolve<IEnumerable<ICacheWarmUp>>();
+                foreach (var warmUp in warmUps)
                 {
-                    webBuilder.UseStartup<Startup>();
-                    webBuilder.UseWebRoot("./WebApp/build");
-                });
+                    warmUp.WarmUp();
+                }
+            });
+    });
+
+builder.Services.AddCors(
+    opt =>
+    {
+        opt.AddPolicy(
+            "CorsPolicy",
+            policy =>
+            {
+                policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+            });
+    });
+
+builder.Services.AddControllers()
+    .AddJsonOptions(
+        opts =>
+        {
+            // Bind strings to enums
+            opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+
+builder.Services.AddSwaggerGen(
+    c =>
+    {
+        c.SwaggerDoc(
+            ServiceApiInfo.ApiGroupConcordancer,
+            info: new OpenApiInfo()
+            {
+                Title = $"{ServiceApiInfo.ServiceName} Concordancer API",
+                Version = $"v{ServiceApiInfo.ServiceVersion.ToString(3)}",
+            });
+        c.SwaggerDoc(
+            ServiceApiInfo.ApiGroupDashboard,
+            info: new OpenApiInfo()
+            {
+                Title = $"{ServiceApiInfo.ServiceName} Dashboard API",
+                Version = $"v{ServiceApiInfo.ServiceVersion.ToString(3)}",
+            });
+
+        // enable attribute annotations
+        c.EnableAnnotations();
+
+        // include code documentation to the swagger doc
+        foreach (var assembly in new[] { Assembly.GetExecutingAssembly(), typeof(ExecutionResult).Assembly })
+        {
+            var xmlFile = $"{assembly.GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            c.IncludeXmlComments(xmlPath);
+        }
+    });
+
+builder.Services.AddHangfire(
+    x =>
+    {
+        // It would be better to use ConnectionStringProvider, but in this case
+        // we would have to build the container which would (at this point) double singletons.
+        // So we are duplicated code from ConnectionStringProvider
+        var connectionString = builder.Configuration[ConfigurationKey.Database.MasterConnectionString];
+        x.UsePostgreSqlStorage(
+            options =>
+            {
+                options.UseNpgsqlConnection(connectionString);
+            });
+        x.UseMediator();
+    });
+
+builder.Services.AddHangfireServer();
+builder.Services.AddHttpClient();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(
+    c =>
+    {
+        c.SwaggerEndpoint($"{ServiceApiInfo.ApiGroupConcordancer}/swagger.json", $"{ServiceApiInfo.ServiceName} Concordancer API");
+        c.SwaggerEndpoint($"{ServiceApiInfo.ApiGroupDashboard}/swagger.json", $"{ServiceApiInfo.ServiceName} Dashboard API");
+    });
+
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors("CorsPolicy");
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapHangfireDashboard("/hangfire");
+app.MapFallbackToFile("index.html");
+
+app.Run();
