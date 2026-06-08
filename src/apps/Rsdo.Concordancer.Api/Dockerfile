@@ -10,13 +10,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
         nodejs \
     && rm -rf /var/lib/apt/lists/*
 
-# COPY LOCAL NUGET PACKAGES
-WORKDIR /nuget
-COPY local-packages/. .
-
-# ADD LOCAL NUGET SOURCE
-RUN dotnet nuget add source /nuget
-
 # RESTORE PACKAGES (with project files only)
 WORKDIR /src/apps
 COPY src/apps/Rsdo.Concordancer.Api/Rsdo.Concordancer.Api.csproj Rsdo.Concordancer.Api/Rsdo.Concordancer.Api.csproj

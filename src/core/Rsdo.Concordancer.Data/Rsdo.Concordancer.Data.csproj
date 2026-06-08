@@ -6,7 +6,6 @@
       <PackageReference Include="FluentMigrator.Runner" />
       <PackageReference Include="FluentMigrator.Runner.Postgres" />
       <PackageReference Include="Npgsql" />
-      <PackageReference Include="Rsdo.StyleCop" />
     </ItemGroup>
 
     <ItemGroup>

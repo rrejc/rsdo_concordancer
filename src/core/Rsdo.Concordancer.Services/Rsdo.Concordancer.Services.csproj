@@ -12,7 +12,6 @@
       <PackageReference Include="Newtonsoft.Json" />
       <PackageReference Include="Npgsql" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
-      <PackageReference Include="Rsdo.StyleCop" />
     </ItemGroup>
 
     <ItemGroup>

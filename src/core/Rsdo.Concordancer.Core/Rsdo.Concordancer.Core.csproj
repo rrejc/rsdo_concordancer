@@ -1,10 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-      <PackageReference Include="Rsdo.StyleCop" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Rsdo.Concordancer.ServiceModel\Rsdo.Concordancer.ServiceModel.csproj" />
     </ItemGroup>
 

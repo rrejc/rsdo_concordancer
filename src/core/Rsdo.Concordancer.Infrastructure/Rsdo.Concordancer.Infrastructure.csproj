@@ -5,7 +5,6 @@
       <PackageReference Include="Microsoft.Extensions.Configuration" />
       <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" />
       <PackageReference Include="OpenSearch.Client" />
-      <PackageReference Include="Rsdo.StyleCop" />
     </ItemGroup>
 
     <ItemGroup>

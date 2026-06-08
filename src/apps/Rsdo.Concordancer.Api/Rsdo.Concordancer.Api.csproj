@@ -6,7 +6,6 @@
         <PackageReference Include="Hangfire" />
         <PackageReference Include="Hangfire.PostgreSql" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" />
-        <PackageReference Include="Rsdo.StyleCop" />
         <PackageReference Include="Serilog.AspNetCore" />
         <PackageReference Include="Serilog.Expressions" />
         <PackageReference Include="Serilog.Settings.Configuration" />

@@ -7,7 +7,6 @@
     <ItemGroup>
       <PackageReference Include="Autofac" />
       <PackageReference Include="CommandLineParser" />
-      <PackageReference Include="Rsdo.StyleCop" />
     </ItemGroup>
 
     <ItemGroup>

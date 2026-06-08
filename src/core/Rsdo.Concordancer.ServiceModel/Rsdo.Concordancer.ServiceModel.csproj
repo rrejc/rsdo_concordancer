@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-      <PackageReference Include="Rsdo.StyleCop" />
       <PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
     </ItemGroup>
 

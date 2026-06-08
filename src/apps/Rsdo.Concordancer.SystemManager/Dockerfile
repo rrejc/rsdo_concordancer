@@ -3,13 +3,6 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
-# COPY LOCAL NUGET PACKAGES
-WORKDIR /nuget
-COPY local-packages/. .
-
-# ADD LOCAL NUGET SOURCE
-RUN dotnet nuget add source /nuget
-
 # RESTORE PACKAGES (with project files only)
 WORKDIR /src/apps
 COPY src/apps/Rsdo.Concordancer.SystemManager/Rsdo.Concordancer.SystemManager.csproj Rsdo.Concordancer.SystemManager/Rsdo.Concordancer.SystemManager.csproj 
