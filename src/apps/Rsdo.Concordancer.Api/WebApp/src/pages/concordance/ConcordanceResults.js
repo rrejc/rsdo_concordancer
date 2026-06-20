@@ -73,7 +73,7 @@ const ConcordanceResults = () => {
             content = <p>{t('shared.noResults')}</p>
         }
         return (
-            <ResultsLayout source='concordance'>
+            <ResultsLayout source='concordance' help={<ConcordanceHelp />}>
                 <div className='row'>
                     <div className='col-lg-10 offset-lg-2'>
                         {content}

@@ -11,6 +11,7 @@ import ResultsHeader from '../../components/results/ResultsHeader';
 import ResultsPager from '../../components/results/ResultsPager';
 import ResultsExport from '../../components/results/ResultsExport';
 import ListItems from '../../components/list/ListItems';
+import ListHelp from '../../components/list/ListHelp';
 import Spinner from '../../components/shared/Spinner';
 
 const ListResults = () => {
@@ -48,7 +49,7 @@ const ListResults = () => {
 
     if (!isLoading && isSuccess && data.items.length > 0) {
         return (
-            <ResultsLayout source='list'>
+            <ResultsLayout source='list' help={<ListHelp />}>
                 <div className='row'>
                     <div className='col'>
                         <ResultsHeader query={body.query} onExport={() => setIsVisible(prevIsVisible => !prevIsVisible)} />
@@ -69,7 +70,7 @@ const ListResults = () => {
             content = <p>{t('shared.noResults')}</p>
         }
         return (
-            <ResultsLayout source='list'>
+            <ResultsLayout source='list' help={<ListHelp />}>
                 <div className='row'>
                     <div className='col-lg-10 offset-lg-2'>
                         {content}
