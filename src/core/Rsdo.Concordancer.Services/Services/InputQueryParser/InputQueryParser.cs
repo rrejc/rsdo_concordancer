@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Autofac.Features.Indexed;
+using Rsdo.Concordancer.Core.Extensions;
 using Rsdo.Concordancer.ServiceModel.Requests.Concordances;
 using Rsdo.Concordancer.ServiceModel.Types;
 using Rsdo.Concordancer.Services.Services.TokenizerService;
@@ -21,6 +22,12 @@ public class InputQueryParser : IInputQueryParser
 
     public async Task<IEnumerable<(TokenType type, string form)>> Tokenize(string query)
     {
+        if (query.IsWildcardSearch())
+        {
+            // Classla tokenizer doesn't support wildcards, so use default tokenizer
+            return await tokenizers[TokenizerType.Default].Tokenize(query);
+        }
+
         try
         {
             return await tokenizers[TokenizerType.Classla].Tokenize(query);

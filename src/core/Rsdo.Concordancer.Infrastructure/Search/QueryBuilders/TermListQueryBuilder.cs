@@ -35,22 +35,12 @@ public class TermListQueryBuilder : IQueryBuilder<TermListQuery>
 
         if (!string.IsNullOrEmpty(wordQuery.Form))
         {
-            queries.Add(
-                new TermQuery()
-                {
-                    Field = $"{tokenField}.formLower",
-                    Value = wordQuery.Form.ToLower(),
-                });
+            queries.Add(wordQuery.Form.ToLower().ToQuery($"{tokenField}.formLower"));
         }
 
         if (!wordQuery.Lemmas.IsNullOrEmpty())
         {
-            queries.Add(
-                new TermsQuery()
-                {
-                    Field = $"{tokenField}.lemma",
-                    Terms = wordQuery.Lemmas,
-                });
+            queries.Add(wordQuery.Lemmas.ToQuery($"{tokenField}.lemma"));
         }
 
         return queries.Count == 0 ? new MatchNoneQuery() : queries.ToBooleanAndQuery();

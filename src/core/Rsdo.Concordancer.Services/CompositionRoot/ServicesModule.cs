@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Reflection;
 using Autofac;
+using Autofac.Core;
 using FluentValidation;
 using Microsoft.Extensions.Caching.Memory;
 using Rsdo.Concordancer.Core.Interfaces;
+using Rsdo.Concordancer.Core.Search.Queries.Concordances;
+using Rsdo.Concordancer.Core.Search.Queries.TermLists;
 using Rsdo.Concordancer.ServiceModel.Requests.Concordances;
+using Rsdo.Concordancer.ServiceModel.Requests.TermLists;
 using Rsdo.Concordancer.ServiceModel.Types;
 using Rsdo.Concordancer.Services.Framework;
 using Rsdo.Concordancer.Services.Framework.BulkLoaders;
@@ -15,6 +19,8 @@ using Rsdo.Concordancer.Services.Framework.Decorators;
 using Rsdo.Concordancer.Services.Search.Aggregations;
 using Rsdo.Concordancer.Services.Search.AlternateSearches;
 using Rsdo.Concordancer.Services.Search.QueryFactories;
+using Rsdo.Concordancer.Services.Search.QueryFactories.Concordances;
+using Rsdo.Concordancer.Services.Search.QueryFactories.TermLists;
 using Rsdo.Concordancer.Services.Services.InputQueryParser;
 using Rsdo.Concordancer.Services.Services.LemmatizationService;
 using Rsdo.Concordancer.Services.Services.ParagraphService;
@@ -83,7 +89,8 @@ public class ServicesModule : Module
         builder.RegisterType<DefaultTokenizerService>().Keyed<ITokenizerService>(TokenizerType.Default).SingleInstance();
         builder.RegisterType<InputQueryParser>().As<IInputQueryParser>().SingleInstance();
         builder.RegisterType<ParagraphService>().As<IParagraphService>().InstancePerLifetimeScope();
-        builder.RegisterType<LemmatizationService>().As<ILemmatizationService>().InstancePerLifetimeScope();
+        builder.RegisterType<SimpleLemmatizationService>().Keyed<ILemmatizationService>(LemmatizationType.Simple).InstancePerLifetimeScope();
+        builder.RegisterType<WildcardLemmatizationService>().Keyed<ILemmatizationService>(LemmatizationType.Wildcard).InstancePerLifetimeScope();
         builder.RegisterType<PartOfSpeechService>().As<IPartOfSpeechService>().InstancePerLifetimeScope();
     }
 
@@ -103,7 +110,33 @@ public class ServicesModule : Module
     private void RegisterSearch(ContainerBuilder builder)
     {
         // Query factories
-        builder.RegisterAssemblyTypes(ServicesAssembly).AsClosedTypesOf(typeof(IQueryFactory<,>)).AsImplementedInterfaces().InstancePerLifetimeScope();
+        var wildcardLemmatizationServiceParameter = new ResolvedParameter(
+            (p, ctx) => p.ParameterType == typeof(ILemmatizationService),
+            (p, ctx) => ctx.ResolveKeyed<ILemmatizationService>(LemmatizationType.Wildcard));
+        var simpleLemmatizationServiceParameter = new ResolvedParameter(
+            (p, ctx) => p.ParameterType == typeof(ILemmatizationService),
+            (p, ctx) => ctx.ResolveKeyed<ILemmatizationService>(LemmatizationType.Simple));
+
+        builder.RegisterType<ExportConcordancesQueryFactory>()
+            .As<IQueryFactory<ExportConcordances, ConcordancesQuery>>()
+            .WithParameter(simpleLemmatizationServiceParameter)
+            .InstancePerLifetimeScope();
+        builder.RegisterType<SearchConcordancesQueryFactory>()
+            .As<IQueryFactory<SearchConcordances, ConcordancesQuery>>()
+            .WithParameter(simpleLemmatizationServiceParameter)
+            .InstancePerLifetimeScope();
+        builder.RegisterType<ConcordanceDetailsQueryFactory>()
+            .As<IQueryFactory<ConcordanceDetails, ConcordancesQuery>>()
+            .WithParameter(simpleLemmatizationServiceParameter)
+            .InstancePerLifetimeScope();
+        builder.RegisterType<ExportTermListQueryFactory>()
+            .As<IQueryFactory<ExportTermList, TermListQuery>>()
+            .WithParameter(wildcardLemmatizationServiceParameter)
+            .InstancePerLifetimeScope();
+        builder.RegisterType<SearchTermListQueryFactory>()
+            .As<IQueryFactory<SearchTermList, TermListQuery>>()
+            .WithParameter(wildcardLemmatizationServiceParameter)
+            .InstancePerLifetimeScope();
 
         // Aggregations
         builder.RegisterType<AggregationProviderFactory>().As<IAggregationProviderFactory>().InstancePerLifetimeScope();
@@ -112,6 +145,7 @@ public class ServicesModule : Module
         // Alternate searches
         builder.RegisterType<LemmasAlternateSearchProvider>()
             .As<IAlternateSearchProvider<SearchConcordances, SearchConcordancesResponse>>()
+            .WithParameter(simpleLemmatizationServiceParameter)
             .InstancePerLifetimeScope();
     }
 }

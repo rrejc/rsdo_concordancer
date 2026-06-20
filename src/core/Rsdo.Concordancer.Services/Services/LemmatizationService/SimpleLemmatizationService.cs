@@ -7,17 +7,18 @@ using Rsdo.Concordancer.Services.Framework.DbContext;
 
 namespace Rsdo.Concordancer.Services.Services.LemmatizationService;
 
-public class LemmatizationService : ILemmatizationService
+public class SimpleLemmatizationService : ILemmatizationService
 {
     private readonly MasterDbContext dbContext;
 
-    public LemmatizationService(MasterDbContext dbContext)
+    public SimpleLemmatizationService(MasterDbContext dbContext)
     {
         this.dbContext = dbContext;
     }
 
-    public async Task<List<string>> GetLemmas(string form)
+    public virtual async Task<List<string>> GetLemmas(string form)
     {
+        // Retrieving lemmas without support for wildcard search
         var lemmas = await dbContext.LemmaFormPair.Where(f => f.Form.ToLower() == form.ToLower()).Select(f => f.Lemma).Distinct().ToListAsync();
         if (lemmas.IsNullOrEmpty())
         {
