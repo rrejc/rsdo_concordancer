@@ -18,7 +18,7 @@ const IndexTopBar = () => {
         <div className={styles.menu}>
             <div className='container-fluid'>
                 <div className='row align-items-center'>
-                    <div className='col'><img src={logo} alt='Logo' /></div>
+                    <div className='col'><a href="https://www.slovenscina.eu"><img src={logo} alt='Logo' /></a></div>
                     <div className={`col ${styles.links}`}><button type='button' onClick={languageClickHandler}><img src={langIcon} alt={changeLanguageTitle} />{changeLanguageCode}</button></div>
                 </div>
             </div>

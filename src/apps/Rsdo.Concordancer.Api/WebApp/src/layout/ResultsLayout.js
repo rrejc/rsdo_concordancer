@@ -49,7 +49,7 @@ const ResultsLayout = (props) => {
                 <div className='container-fluid'>
                     <div className='row align-items-center'>
                         <div className='col-sm-4 col-lg-2 col-xl-2'>
-                            <Link to={search.rootUrl}><img src={logo} alt='Logo' /></Link>
+                            <a href="https://www.slovenscina.eu"><img src={logo} alt='Logo' /></a>
                             <ul className={styles.areaButtons}>
                                 <li className={`${styles.areaButton} ${isConcordance ? styles.active : null}`}><Link to={`/${search.corpusId}/concordance`}><img src={isConcordance ? concordanceActiveIcon : concordanceInactiveIcon} alt='Concordance' /></Link></li>
                                 <li className={`${styles.areaButton} ${!isConcordance ? styles.active : null}`}><Link to={`/${search.corpusId}/list`}><img src={!isConcordance ? listActiveIcon : listInactiveIcon} alt='List' /></Link></li>
