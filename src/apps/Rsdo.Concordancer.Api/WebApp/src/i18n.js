@@ -22,7 +22,9 @@ const resources = {
                 'searchError': 'Server returned error when searching.',
                 'searchHelp': 'Help',
                 'searchHistory': 'Search history',
-                'searchRecords': 'Showing {{start}}-{{end}} from {{total}} records.'
+                'searchRecords': 'Showing {{start}}-{{end}} from {{total}} records.',
+                'select': 'Select',
+                'unselect': 'Remove selected'
             },
             concordance: {
                 'title': 'Search concordances',
@@ -63,7 +65,9 @@ const resources = {
                 'searchError': 'Strežnik je vrnil napako pri iskanju.',
                 'searchHelp': 'Pomoč',
                 'searchHistory': 'Zgodovina iskanj',
-                'searchRecords': 'Prikazujem {{start}}-{{end}} od {{total}} zapisov.'
+                'searchRecords': 'Prikazujem {{start}}-{{end}} od {{total}} zapisov.',
+                'select': 'Izberi',
+                'unselect': 'Odstrani izbrano'
             },
             concordance: {
                 'title': 'Iskanje po konkordancah',

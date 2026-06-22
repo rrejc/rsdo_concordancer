@@ -9,12 +9,9 @@
         color: $text-color;
         display: flex;
         text-decoration: none;
-
-        .remove {
-            margin-right: 0.8rem;
-        }
-
+        
         .title {
+            margin-left: 1.2rem;
             flex-grow: 1;
             margin-right: 0.8rem;
             overflow: hidden;
